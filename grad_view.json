@@ -1,0 +1,201 @@
+[
+    {
+        "id": "58238c9a.8a2704",
+        "type": "tab",
+        "label": "卒研_管理画面部分",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "2e9c77f.4e4a688",
+        "type": "http in",
+        "z": "58238c9a.8a2704",
+        "name": "",
+        "url": "/home",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 160,
+        "wires": [
+            [
+                "4709f2f7.bb06ac"
+            ]
+        ]
+    },
+    {
+        "id": "3e612390.d55d7c",
+        "type": "comment",
+        "z": "58238c9a.8a2704",
+        "name": "管理ホーム画面",
+        "info": "",
+        "x": 120,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "4709f2f7.bb06ac",
+        "type": "template",
+        "z": "58238c9a.8a2704",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html>\n    <head>\n        <title>監視画面</title>\n    </head>\n    <body>\n        <h1>作業者端末一覧</h1>\n        <ul>\n            <li><a href=\"http://192.168.1.100:1880/getsensor\">１番</a></li>\n            {{!--<li><a href=\"http://192.168.1.100:1880/\">２番</a></li>--}}\n        </ul>\n    </body>\n    <scripts>\n        \n    </scripts>\n</html>",
+        "output": "str",
+        "x": 280,
+        "y": 160,
+        "wires": [
+            [
+                "61277431.3e0c6c"
+            ]
+        ]
+    },
+    {
+        "id": "61277431.3e0c6c",
+        "type": "http response",
+        "z": "58238c9a.8a2704",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 430,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "5f77f0fa.0923f",
+        "type": "comment",
+        "z": "58238c9a.8a2704",
+        "name": "センサ値表示フロー",
+        "info": "",
+        "x": 130,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "cb0aa3ad.67ffe",
+        "type": "template",
+        "z": "58238c9a.8a2704",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html lang=\"ja\">\n<head>\n<meta charset=\"UTF-8\">\n<title>SensingPages</title>\n</head>\n<body style=\"color: #000000; background-color: #ffffff; font-size: 100%\">\n  <script type=\"text/javascript\">\n    // 接続先URI ラズパイのIPを書くこと\n    var ip = \"192.168.1.100\"\n    var uri = \"ws://\" + \"192.168.1.100:1880\" + \"/ws/sensor\"; // ← [output] websocket の path に合わせる\n    // WebSocketオブジェクト\n    var webSocket = null;\n\n    // 接続\n    function open() {\n        if (webSocket == null) {\n            // 初期化\n            webSocket = new WebSocket(uri);\n            // イベントハンドラ\n            webSocket.onopen = (ev) =>\n              {\n                console.log(\"Connect..\");\n              };\n\n            webSocket.onmessage = (ev) =>\n              {\n                if (ev && ev.data) {\n                    console.log(ev.data);\n                    // console.log(typeof(ev.data));\n                    var msg = JSON.parse(ev.data);\n                    var d = document.getElementById(\"targetDiv\");\n                    d.innerHTML = ev.data;\n                }\n              };\n\n            webSocket.onclose = (ev) => {\n                console.log(\"disconnect(\" + ev.code + \")\");\n                webSocket = null;\n              };\n\n            webSocket.onerror = (ev) =>\n              {\n                  console.log(\"Error \" + ev);\n              };;\n        }\n    }\n    open();\n  </script>\n  <div id=\"targetDiv\" ></div>\n</body>\n</html>",
+        "output": "str",
+        "x": 300,
+        "y": 260,
+        "wires": [
+            [
+                "2929ef77.c683"
+            ]
+        ]
+    },
+    {
+        "id": "5954d39a.fa40ac",
+        "type": "http in",
+        "z": "58238c9a.8a2704",
+        "name": "",
+        "url": "/getsensor",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 260,
+        "wires": [
+            [
+                "cb0aa3ad.67ffe"
+            ]
+        ]
+    },
+    {
+        "id": "2929ef77.c683",
+        "type": "http response",
+        "z": "58238c9a.8a2704",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 470,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "36fa6fcf.4adce",
+        "type": "http in",
+        "z": "58238c9a.8a2704",
+        "name": "",
+        "url": "/emergency",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 360,
+        "wires": [
+            [
+                "fd48489b.3a7608",
+                "305ea096.29cb9"
+            ]
+        ]
+    },
+    {
+        "id": "fd48489b.3a7608",
+        "type": "mqtt out",
+        "z": "58238c9a.8a2704",
+        "name": "sub/M5stack",
+        "topic": "sub/M5stack",
+        "qos": "",
+        "retain": "",
+        "broker": "7f196a49.db0374",
+        "x": 410,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "21ed53d5.9c356c",
+        "type": "comment",
+        "z": "58238c9a.8a2704",
+        "name": "緊急招集",
+        "info": "管理者がWebページからM5を持った作業員を招集できるように通知",
+        "x": 100,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "305ea096.29cb9",
+        "type": "debug",
+        "z": "58238c9a.8a2704",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 410,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "7f196a49.db0374",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    }
+]

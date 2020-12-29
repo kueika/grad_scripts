@@ -1,0 +1,4 @@
+# pymongo is founded bugs on using Raspberrypi, 
+# below version is stable on RaspberrypiOS
+pymongo == 3.4.0
+paho-mqtt
