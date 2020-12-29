@@ -39,7 +39,7 @@ npm install -g --unsafe-perm node-red
 node-red
 ```
 
-json で node-red のソーススクリプトをインポート可能
+２つの json で node-red のソーススクリプトをインポート可能
 
 動かすのに必要な node-red ライブラリ
 
