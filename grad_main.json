@@ -1,0 +1,479 @@
+[
+    {
+        "id": "c250e504.097968",
+        "type": "tab",
+        "label": "卒研_メイン部分処理",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "e3a25db3.ad14",
+        "type": "aedes broker",
+        "z": "c250e504.097968",
+        "name": "",
+        "mqtt_port": 1883,
+        "mqtt_ws_port": "",
+        "cert": "",
+        "key": "",
+        "certname": "",
+        "keyname": "",
+        "dburl": "",
+        "usetls": false,
+        "x": 530,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "88f651dd.8cf9c",
+        "type": "inject",
+        "z": "c250e504.097968",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "/sub/M5stack",
+        "payload": "{\"message\":\"Please take a rest\"}",
+        "payloadType": "json",
+        "x": 90,
+        "y": 700,
+        "wires": [
+            [
+                "39a0f9.390b1f08"
+            ]
+        ]
+    },
+    {
+        "id": "bd89bd62.23f8f",
+        "type": "comment",
+        "z": "c250e504.097968",
+        "name": "m5から受け取ったセンサ値はmongoに溜め込むようにする",
+        "info": "",
+        "x": 680,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "f157413a.9098c",
+        "type": "comment",
+        "z": "c250e504.097968",
+        "name": "休憩提案機能確認用",
+        "info": "一定間隔ごとに休憩指示を送り出す機能。\n\n改良案としては、WBGTの値に基づく実装が必要",
+        "x": 110,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "2817322c.c2ce6e",
+        "type": "comment",
+        "z": "c250e504.097968",
+        "name": "MQTT Broker port 1883",
+        "info": "",
+        "x": 540,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "39a0f9.390b1f08",
+        "type": "mqtt out",
+        "z": "c250e504.097968",
+        "name": "",
+        "topic": "sub/M5stack",
+        "qos": "0",
+        "retain": "",
+        "broker": "7f196a49.db0374",
+        "x": 250,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "a8235fb7.ff6b9",
+        "type": "mqtt in",
+        "z": "c250e504.097968",
+        "name": "",
+        "topic": "pub/M5stack",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "839dc925.1a0fd8",
+        "x": 90,
+        "y": 480,
+        "wires": [
+            [
+                "94ea97d9.840cd8"
+            ]
+        ]
+    },
+    {
+        "id": "eaf4e0c4.1cb62",
+        "type": "mongodb2 in",
+        "z": "c250e504.097968",
+        "service": "_ext_",
+        "configNode": "a45ef670.7b6238",
+        "name": "m5stack insert",
+        "collection": "m5stack01_test",
+        "operation": "insert",
+        "x": 540,
+        "y": 480,
+        "wires": [
+            [
+                "afb970e.8c42f9"
+            ]
+        ]
+    },
+    {
+        "id": "afb970e.8c42f9",
+        "type": "debug",
+        "z": "c250e504.097968",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "e402e03a.05182",
+        "type": "comment",
+        "z": "c250e504.097968",
+        "name": "ガスセンサの値も別dbで溜め込む",
+        "info": "",
+        "x": 160,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "1aaebe37.dd44e2",
+        "type": "mqtt in",
+        "z": "c250e504.097968",
+        "name": "",
+        "topic": "pub/gas",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "839dc925.1a0fd8",
+        "x": 80,
+        "y": 580,
+        "wires": [
+            [
+                "674afbd0.2b7b54",
+                "66c582c0.6f71dc"
+            ]
+        ]
+    },
+    {
+        "id": "f0b1d2d2.095af",
+        "type": "mongodb2 in",
+        "z": "c250e504.097968",
+        "service": "_ext_",
+        "configNode": "a45ef670.7b6238",
+        "name": "mq-9 insert",
+        "collection": "MQ9",
+        "operation": "insert",
+        "x": 530,
+        "y": 580,
+        "wires": [
+            [
+                "b2557676.8b2178"
+            ]
+        ]
+    },
+    {
+        "id": "b2557676.8b2178",
+        "type": "debug",
+        "z": "c250e504.097968",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "674afbd0.2b7b54",
+        "type": "function",
+        "z": "c250e504.097968",
+        "name": "insert mongodb gas",
+        "func": "t = new Date();\n// getTime  millisecond\nt.setTime(t.getTime() + 1000*60*60*9);\n// new Date(Date.now()).toISOString()\nmsg.payload = {\n  gas_value : msg.payload.gas_sensor_value,\n  date : t.toISOString()\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 280,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2a806ac4.c1c9c6",
+        "type": "inject",
+        "z": "c250e504.097968",
+        "name": "定期実行_ガス検知",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 760,
+        "wires": [
+            [
+                "f349a4e6.3c6bb8"
+            ]
+        ]
+    },
+    {
+        "id": "f349a4e6.3c6bb8",
+        "type": "exec",
+        "z": "c250e504.097968",
+        "command": "python3 ~/scripts/gas_value_publish.py",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "",
+        "x": 440,
+        "y": 760,
+        "wires": [
+            [
+                "f37206c2.54ac48"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "5ac51706.aec1c8",
+        "type": "websocket out",
+        "z": "c250e504.097968",
+        "name": "",
+        "server": "e8590e89.ca967",
+        "client": "",
+        "x": 300,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "f37206c2.54ac48",
+        "type": "debug",
+        "z": "c250e504.097968",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "94ea97d9.840cd8",
+        "type": "function",
+        "z": "c250e504.097968",
+        "name": "Insert mongodb",
+        "func": "t = new Date();\n// getTime  millisecond\nt.setTime(t.getTime() + 1000*60*60*9);\n// new Date(Date.now()).toISOString()\nmsg.payload ={\n  id: msg.payload.deviceID,\n  temp :msg.payload.env_temperature,\n  body :msg.payload.body_temperature,\n  hum :msg.payload.humidity,\n  date : t.toISOString()\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 300,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "44ea3b77.399244",
+        "type": "inject",
+        "z": "c250e504.097968",
+        "d": true,
+        "name": "デプロイ時用の起動シーケンス",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 900,
+        "wires": [
+            [
+                "f9bb4c5b.bd2e"
+            ]
+        ]
+    },
+    {
+        "id": "f9bb4c5b.bd2e",
+        "type": "exec",
+        "z": "c250e504.097968",
+        "command": "python3 ~/scripts/test_mongo.py",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "",
+        "x": 480,
+        "y": 900,
+        "wires": [
+            [
+                "9007ef00.37cd1"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "9007ef00.37cd1",
+        "type": "debug",
+        "z": "c250e504.097968",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "17f1e153.1ff8ff",
+        "type": "comment",
+        "z": "c250e504.097968",
+        "name": "気温監視・休憩提案",
+        "info": "",
+        "x": 110,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "66c582c0.6f71dc",
+        "type": "debug",
+        "z": "c250e504.097968",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 250,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "da02afcc.f27ef",
+        "type": "comment",
+        "z": "c250e504.097968",
+        "name": "M5stack １号",
+        "info": "",
+        "x": 90,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "7f196a49.db0374",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "839dc925.1a0fd8",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "a45ef670.7b6238",
+        "type": "mongodb2",
+        "uri": "mongodb://localhost:27017/sotuken",
+        "name": "",
+        "options": "",
+        "parallelism": "-1"
+    },
+    {
+        "id": "e8590e89.ca967",
+        "type": "websocket-listener",
+        "path": "/ws/sensor",
+        "wholemsg": "false"
+    }
+]
